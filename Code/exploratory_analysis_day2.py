@@ -1,3 +1,5 @@
+# Written by Will Marschall
+# Updated: 2/26/2026
 #%%
 import pandas as pd
 import matplotlib.pyplot as plt
