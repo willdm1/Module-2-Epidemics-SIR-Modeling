@@ -31,5 +31,9 @@ plt.show()
 #3 What information about the virus would be helpful in determining the shape of the outbreak curve?
 # It would be helpful to know how the virus spreads. Viruses that spread more easily will likely have a greater rate of 
 # infection and result in a greater outbreak curve. For example, an airporn virus may infect a population faster than one 
+<<<<<<< Updated upstream
+# that spreads fluids
+>>>>>>> Stashed changes
+=======
 # that spreads fluids
 >>>>>>> Stashed changes
