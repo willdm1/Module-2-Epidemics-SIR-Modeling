@@ -18,3 +18,6 @@ def exploratory_analysis_day1():
 
 def exploratory_analysis_day2():
     _run_from_code("exploratory_analysis_day2.py")
+
+def exploratory_analysis_day3():
+    _run_from_code("exploratory_analysis_day3.py")
