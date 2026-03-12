@@ -13,11 +13,26 @@ def _run_from_code(script_name: str):
     finally:
         os.chdir(old)
 
-def exploratory_analysis_day1():
-    _run_from_code("exploratory_analysis_day1.py")
+def exploratory_analysis_day1_2b():
+    _run_from_code("exploratory_analysis_day1_2b.py")
 
-def exploratory_analysis_day2():
-    _run_from_code("exploratory_analysis_day2.py")
+def exploratory_analysis_day2_2b():
+    _run_from_code("exploratory_analysis_day2_2b.py")
 
-def exploratory_analysis_day3():
-    _run_from_code("exploratory_analysis_day3.py")
+def exploratory_analysis_day3_2c():
+    _run_from_code("exploratory_analysis_day3_2c.py")
+
+def exploratory_analysis_day3_2d():
+    _run_from_code("exploratory_analysis_day3_2d.py")
+
+def exploratory_analysis_day3_2e():
+    _run_from_code("exploratory_analysis_day3_2e.py")
+
+def exploratory_analysis_day3_2f():
+    _run_from_code("exploratory_analysis_day3_2f.py")
+
+def exploratory_analysis_day3_2g():
+    _run_from_code("exploratory_analysis_day4_2g.py")
+
+def exploratory_analysis_day3_2h():
+    _run_from_code("exploratory_analysis_day4_2h.py")

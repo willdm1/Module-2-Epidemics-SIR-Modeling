@@ -1,5 +1,6 @@
+# exploratory_analysis_day1_2b
 # Written by Reagan Oswald
-# Updated 2/26/2026
+# Updated 3/9/2026
 
 #%%
 import pandas as pd
