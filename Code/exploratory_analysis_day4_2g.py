@@ -135,9 +135,9 @@ best_sse = best["sse"]
 # Lecture 2 defines R0 = beta/gamma
 R0_best = beta_best / gamma_best
 
-def exploratory_analysis_day3_2e():
+def exploratory_analysis_day4_2g():
 
-    # This runs the full Day 3 workflow for Data Release #3:
+    # This runs the full Day 4 workflow for Data Release #3:
     
     # Load Data Release #3
     data = pd.read_csv(
@@ -174,4 +174,4 @@ def exploratory_analysis_day3_2e():
     plt.show()
 
 if __name__ == "__main__":
-    exploratory_analysis_day3_2e()
+    exploratory_analysis_day4_2g()
