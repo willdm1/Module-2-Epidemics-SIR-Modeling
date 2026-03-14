@@ -158,6 +158,7 @@ def exploratory_analysis_day3_2f():
     t_future = np.arange(1, 301, 1, dtype=float)  # run out 300 days
     Sf, Ef, If, Rf = euler_seir(beta_best, sigma_best, gamma_best, S0, E0, I0, R0, t_future, N, h=h)
 
+    # Find the peak from the forward run 
     peak_idx = int(np.argmax(If))
     peak_day = t_future[peak_idx]
     peak_I = If[peak_idx]
@@ -166,6 +167,7 @@ def exploratory_analysis_day3_2f():
     print(f"  Peak day (model)        = {peak_day:.0f}")
     print(f"  Peak active infections  = {peak_I:.1f}")
 
+    # Plot the forward prediction of I(t) with the peak day marked
     plt.figure(figsize=(10, 6))
     plt.plot(t_future, If, linewidth=2, label="Model I(t) forward prediction")
     plt.axvline(peak_day, linestyle="--", label=f"Peak day = {peak_day:.0f}")
