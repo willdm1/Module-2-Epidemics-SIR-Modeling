@@ -119,6 +119,7 @@ def exploratory_analysis_day3_2c():
 
     Sg, Eg, Ig, Rg = euler_seir(beta_guess, sigma_guess, gamma_guess, S0, E0, I0, R0, t, N, h=h)
 
+    # Plotted the SEIR compartments from Euler’s method with our initial parameter guess
     plt.figure(figsize=(10, 6))
     plt.plot(t, Sg, label="S(t) Euler")
     plt.plot(t, Eg, label="E(t) Euler")
