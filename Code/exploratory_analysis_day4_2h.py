@@ -1,8 +1,4 @@
 # exploratory_analysis_day4_2h
-
-# Written by
-# Updated 3/10/2026
-
 # Written by Will and Reagan
 # Updated 3/10/2026
 
