@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
+# Solves the SEIR system numerically using Euler's method for specified parameters, initial conditions, and timepoints.
 def euler_seir(beta, sigma, gamma, S0, E0, I0, R0, timepoints, N, h=1.0):
 
     # This is our Euler’s method for SEIR system.
@@ -50,12 +50,12 @@ def euler_seir(beta, sigma, gamma, S0, E0, I0, R0, timepoints, N, h=1.0):
 
 def sse(I_obs, I_model):
     # SSE = Σ (I_obs - I_model)^2
-    # We match the Lecture 3 format for the error function that grid search minimizes.
+    # We match the Lecture 3 format for the error function that grid search minimizes
     I_obs = np.asarray(I_obs, dtype=float)
     I_model = np.asarray(I_model, dtype=float)
     return np.sum((I_obs - I_model) ** 2)
 
-
+# Searches across beta, sigma, and gamma values to find the combination that minimizes SSE between model I(t) and observed data
 def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
                     beta_range=(0.3, 0.7),
                     sigma_range=(0.1, 0.3),
@@ -63,7 +63,7 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
                     resolution=15,
                     h=1.0):
     
-    # This is our 3-parameter grid search over (beta, sigma, gamma), minimizing SSE.
+    # This is our 3-parameter grid search over (beta, sigma, gamma), minimizing SSE
     betas = np.linspace(beta_range[0], beta_range[1], resolution)
     sigmas = np.linspace(sigma_range[0], sigma_range[1], resolution)
     gammas = np.linspace(gamma_range[0], gamma_range[1], resolution)
