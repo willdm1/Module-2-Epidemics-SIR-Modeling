@@ -8,8 +8,12 @@ import matplotlib.pyplot as plt
 
 
 # Load the data
-data = pd.read_csv(r'E:\OneDrive - University of Virginia\Will M\Undergraduate Research Courses-Grants\05_Spring_2026\Computational_Biomedical_BME_2315\Module-2-Epidemics-SIR-Modeling\Data\mystery_virus_daily_active_counts_RELEASE#1.csv')
-
+data = pd.read_csv(
+    "../Data/mystery_virus_daily_active_counts_RELEASE#1.csv",
+    parse_dates=["date"],
+    header=0,
+    index_col=None
+)
 
 # Make a plot of the active cases over time
 

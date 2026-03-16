@@ -137,7 +137,7 @@ def exploratory_analysis_day3_2d():
     print(f"  sigma = {sigma_best:.3f}")
     print(f"  gamma = {gamma_best:.3f}")
     print(f"  SSE   = {best_sse:.2f}")
-    print(f"  Implied R0 (Lecture 2: R0 = beta/gamma) = {R0_best:.3f}")
+    print(f"  Implied R0 (R0 = beta/gamma) = {R0_best:.3f}")
 
 if __name__ == "__main__":
     exploratory_analysis_day3_2d()

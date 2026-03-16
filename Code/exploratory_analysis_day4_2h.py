@@ -1,6 +1,6 @@
 # exploratory_analysis_day4_2h
 # Written by Will and Reagan
-# Updated 3/10/2026
+# Updated 3/14/2026
 
 #Strategy 1/3: Mask mandate with reduce Beta by 40% starting Day 70
 #Strategy 2/3: Vaccine Campaign will move 2000*0.9 from S to R as a single event on day 70

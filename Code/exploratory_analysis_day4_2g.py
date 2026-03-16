@@ -1,6 +1,6 @@
 # exploratory_analysis_day4_2g
 # Written by Will and Reagan
-# Updated 3/10/2026
+# Updated 3/14/2026
 
 #For this section we want to plot the SEIR model against day 3 release
 #The code for the SEIR model was already written for Day3_2e
