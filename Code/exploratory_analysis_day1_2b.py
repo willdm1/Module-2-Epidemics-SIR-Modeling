@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 # Load the data
-data = pd.read_csv('Data/mystery_virus_daily_active_counts_RELEASE#1.csv')
+data = pd.read_csv(r'E:\OneDrive - University of Virginia\Will M\Undergraduate Research Courses-Grants\05_Spring_2026\Computational_Biomedical_BME_2315\Module-2-Epidemics-SIR-Modeling\Data\mystery_virus_daily_active_counts_RELEASE#1.csv')
 
 
 # Make a plot of the active cases over time
@@ -32,3 +32,5 @@ plt.show()
 # It would be helpful to know how the virus spreads. Viruses that spread more easily will likely have a greater rate of 
 # infection and result in a greater outbreak curve. For example, an airporn virus may infect a population faster than one 
 # that spreads fluids.
+
+# %%

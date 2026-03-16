@@ -70,7 +70,7 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
 # --- fit to Release #3 (UVA) as you already do ---
 
 data = pd.read_csv(
-    "C:\\Users\\Reaga\\OneDrive\\Desktop\\BME_2315\\Module-2-Epidemics-SIR-Modeling\\Data\\mystery_virus_daily_active_counts_RELEASE#3.csv",
+    "../Data/mystery_virus_daily_active_counts_RELEASE#3.csv",
     parse_dates=["date"],
     header=0,
     index_col=None

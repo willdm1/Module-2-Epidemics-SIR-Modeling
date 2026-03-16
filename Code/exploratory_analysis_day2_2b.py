@@ -11,7 +11,7 @@ from scipy.optimize import curve_fit
 
 #%%
 # Load the data
-data = pd.read_csv('../Data/mystery_virus_daily_active_counts_RELEASE#1.csv', parse_dates=['date'], header=0, index_col=None)
+data = pd.read_csv(r'E:\OneDrive - University of Virginia\Will M\Undergraduate Research Courses-Grants\05_Spring_2026\Computational_Biomedical_BME_2315\Module-2-Epidemics-SIR-Modeling\Data\mystery_virus_daily_active_counts_RELEASE#1.csv')
 
 # We ceck the data
 t_all = data["day"].to_numpy(dtype=float)
