@@ -32,7 +32,8 @@ def exploratory_analysis_day3_2f():
     _run_from_code("exploratory_analysis_day3_2f.py")
 
 def exploratory_analysis_day3_2g():
-    _run_from_code("exploratory_analysis_day4_2g.py")
+    _run_from_code("exploratory_analysis_day3_2g.py")
 
 def exploratory_analysis_day3_2h():
-    _run_from_code("exploratory_analysis_day4_2h.py")
+    _run_from_code("exploratory_analysis_day3_2h.py")
+
