@@ -154,7 +154,7 @@ def apply_vaccination_events(S, R, t_full, events):
 # --- VT baseline and interventions ---
 def vt_interventions():
 
-    # --- Initial conditions ---
+    # Initial conditions
     N = 38294.0
     I0 = 1.0
     R0 = 0.0
@@ -256,7 +256,86 @@ def vt_interventions():
     # Stitch rollout
     Ib_vax_roll = np.concatenate([I1r, I2r[1:], I3r[1:], I4r[1:]])
 
-    return t_full, Ib_base, I_mask, Ib_vax_single, Ib_vax_roll
+    # 5. EXTRA Combined Intervention (Masking + Vaccine Rollout)
+
+    # Build masked parameter arrays once
+    beta_combo_t, sigma_combo_t, gamma_combo_t = make_masking_params(
+        t_full, beta_best, sigma_best, gamma_best, day_start=70
+    )
+
+    # Segment 1: day 1 -> 70
+    t1c = np.arange(1, 71)
+    beta1 = beta_combo_t[:len(t1c)]
+    sigma1 = sigma_combo_t[:len(t1c)]
+    gamma1 = gamma_combo_t[:len(t1c)]
+
+    S1c, E1c, I1c, R1c = euler_seir_timevarying(
+        beta1, sigma1, gamma1,
+        S0, E0, I0, R0,
+        t1c, N, h=1.0
+    )
+
+    # Vaccinate at day 70
+    S70c = S1c[-1] - 1000 * 0.9
+    R70c = R1c[-1] + 1000 * 0.9
+
+    # Segment 2: day 70 -> 80
+    t2c = np.arange(70, 81)
+    start2 = np.where(t_full == 70)[0][0]
+    end2 = start2 + len(t2c)
+
+    beta2 = beta_combo_t[start2:end2]
+    sigma2 = sigma_combo_t[start2:end2]
+    gamma2 = gamma_combo_t[start2:end2]
+
+    S2c, E2c, I2c, R2c = euler_seir_timevarying(
+        beta2, sigma2, gamma2,
+        S70c, E1c[-1], I1c[-1], R70c,
+        t2c, N, h=1.0
+    )
+
+    # Vaccinate at day 80
+    S80c = S2c[-1] - 1000 * 0.9
+    R80c = R2c[-1] + 1000 * 0.9
+
+    # Segment 3: day 80 -> 90
+    t3c = np.arange(80, 91)
+    start3 = np.where(t_full == 80)[0][0]
+    end3 = start3 + len(t3c)
+
+    beta3 = beta_combo_t[start3:end3]
+    sigma3 = sigma_combo_t[start3:end3]
+    gamma3 = gamma_combo_t[start3:end3]
+
+    S3c, E3c, I3c, R3c = euler_seir_timevarying(
+        beta3, sigma3, gamma3,
+        S80c, E2c[-1], I2c[-1], R80c,
+        t3c, N, h=1.0
+    )
+
+    # Vaccinate at day 90
+    S90c = S3c[-1] - 1000 * 0.9
+    R90c = R3c[-1] + 1000 * 0.9
+
+    # Segment 4: day 90 -> 120
+    t4c = np.arange(90, 121)
+    start4 = np.where(t_full == 90)[0][0]
+    end4 = start4 + len(t4c)
+
+    beta4 = beta_combo_t[start4:end4]
+    sigma4 = sigma_combo_t[start4:end4]
+    gamma4 = gamma_combo_t[start4:end4]
+
+    S4c, E4c, I4c, R4c = euler_seir_timevarying(
+        beta4, sigma4, gamma4,
+        S90c, E3c[-1], I3c[-1], R90c,
+        t4c, N, h=1.0
+    )
+
+    # Stitch combo trajectory
+    Ib_combo = np.concatenate([I1c, I2c[1:], I3c[1:], I4c[1:]])
+
+    return t_full, Ib_base, I_mask, Ib_vax_single, Ib_vax_roll, Ib_combo
 
 # PLOTTING FUNCTIONS
 
@@ -289,13 +368,22 @@ def plot_baseline_vs_rollout(t, base, roll):
     plt.ylabel("Active infections")
     plt.legend(); plt.tight_layout(); plt.show()
 
+def plot_baseline_vs_combo(t, base, combo):
+    plt.figure(figsize=(10,6))
+    plt.plot(t, base, label="Baseline")
+    plt.plot(t, combo, label="Combo (Mask + Rollout)")
+    plt.title("Baseline VT Data vs. Combo Intervention Protocol")
+    plt.xlabel("Day")
+    plt.ylabel("Active infections")
+    plt.legend(); plt.tight_layout(); plt.show()
 
-def plot_all_interventions(t, base, mask, single, roll):
+def plot_all_interventions(t, base, mask, single, roll, combo):
     plt.figure(figsize=(10,6))
     plt.plot(t, base, label="Baseline")
     plt.plot(t, mask, label="Mask")
     plt.plot(t, single, label="Single vax")
     plt.plot(t, roll, label="Rollout")
+    plt.plot(t, combo, label="Combo")
     plt.title("Baseline VT Data vs. Each Chosen Intervention")
     plt.xlabel("Day")
     plt.ylabel("Active infections")
@@ -344,7 +432,7 @@ def exploratory_analysis_day4_2h():
     # Lecture 4 says E0(VT) = E0(UVA)
     E0_UVA = E0_2
 
-    t, base, mask, single, roll = vt_interventions()
+    t, base, mask, single, roll, combo = vt_interventions()
 
     def peak_metrics(t, I):
         idx = int(np.argmax(I))
@@ -355,12 +443,14 @@ def exploratory_analysis_day4_2h():
     d_mask, Ipk_mask = peak_metrics(t, mask)
     d_single, Ipk_single = peak_metrics(t, single)
     d_roll, Ipk_roll = peak_metrics(t, roll)
+    d_combo, Ipk_combo = peak_metrics(t, combo)
 
     print("\nVT intervention comparison: peak metrics")
     print(f"Baseline: peak day {d_base:.0f}, peak I {Ipk_base:.1f}")
     print(f"Mask:     peak day {d_mask:.0f}, peak I {Ipk_mask:.1f}")
     print(f"Vax once: peak day {d_single:.0f}, peak I {Ipk_single:.1f}")
     print(f"Vax roll: peak day {d_roll:.0f}, peak I {Ipk_roll:.1f}")
+    print(f"Combo:    peak day {d_combo:.0f}, peak I {Ipk_combo:.1f}")
 
     # Total active infections over days 70–120 (simple area-under-I curve proxy)
     # (This is not explicitly named in slides, but it is a direct way to compare burden over 70–120.)
@@ -369,17 +459,20 @@ def exploratory_analysis_day4_2h():
     A_mask = np.sum(mask[mask_70_120])
     A_single = np.sum(single[mask_70_120])
     A_roll = np.sum(roll[mask_70_120])
+    A_combo = np.sum(combo[mask_70_120])
 
     print("\nSum of active infections over days 70–120 (burden proxy)")
     print(f"Baseline: {A_base:.1f}")
     print(f"Mask:     {A_mask:.1f}  (reduction {A_base - A_mask:.1f})")
     print(f"Vax once: {A_single:.1f} (reduction {A_base - A_single:.1f})")
     print(f"Vax roll: {A_roll:.1f} (reduction {A_base - A_roll:.1f})")
+    print(f"Combo:    {A_combo:.1f} (reduction {A_base - A_combo:.1f})")
 
     plot_baseline_vs_mask(t, base, mask)
     plot_baseline_vs_single(t, base, single)
     plot_baseline_vs_rollout(t, base, roll)
-    plot_all_interventions(t, base, mask, single, roll)
+    plot_baseline_vs_combo(t, base, combo)
+    plot_all_interventions(t, base, mask, single, roll, combo)
 
 
 if __name__ == "__main__":
