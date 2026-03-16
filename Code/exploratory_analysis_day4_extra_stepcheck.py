@@ -1,6 +1,6 @@
-# exploratory_analysis_day3_2f
-# Written by Will Marschall and Reagan Oswald
-# Updated 3/9/2026
+# exploratory_analysis_day4_extra_stepcheck
+# Written by Will
+# Updated 3/15/2026
 
 import numpy as np
 import pandas as pd
@@ -69,7 +69,6 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
         "sse": np.inf
     }
 
-    # This is just for printing progress 
     total = len(betas) * len(sigmas) * len(gammas)
     count = 0
 
@@ -85,55 +84,13 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
 
     return best
 
-# Repeat from 2d so that it can run
-# Load Data Release #2
-data = pd.read_csv(
-    "../Data/mystery_virus_daily_active_counts_RELEASE#2.csv",
-    parse_dates=["date"],
-    header=0,
-    index_col=None
-)
 
-t = data["day"].to_numpy(dtype=float)
-I_obs = data["active reported daily cases"].to_numpy(dtype=float)
 
-# Here are the initial conditions (Lecture 3 pseudocode requires S0,E0,I0,R0,N)
+def exploratory_analysis_day4_extra_stepcheck():
 
-N = 10000.0  # This is what was used in Lecture 2 (not sure what else we would use)
+    # Extra numerical check:
+    # Compares forward SEIR peak predictions using smaller Euler step sizes to see whether the predicted peak is sensitive to the choice of h.
 
-I0 = float(I_obs[0]) 
-E0 = 0.0
-R0 = 0.0
-S0 = N - E0 - I0 - R0
-
-h = 1.0  # this is our daily time step
-
-# Parameter ranges + resolution from Class materials/seir_grid_search.html
-best = grid_search_fit(
-    timepoints=t,
-    I_obs=I_obs,
-    N=N,
-    S0=S0, E0=E0, I0=I0, R0=R0,
-    beta_range=(0.3, 0.7),
-    sigma_range=(0.1, 0.3),
-    gamma_range=(0.05, 0.25),
-    resolution=15,
-    h=h
-)
-
-# Extract the best parameters and R0 from the grid search
-beta_best = best["beta"]
-sigma_best = best["sigma"]
-gamma_best = best["gamma"]
-best_sse = best["sse"]
-
-# Lecture 2 defines R0 = beta/gamma
-R0_best = beta_best / gamma_best
-
-def exploratory_analysis_day3_2f():
-
-    # This runs the full Day 3 workflow for Data Release #2:
-    
     # Load Data Release #2
     data = pd.read_csv(
         "../Data/mystery_virus_daily_active_counts_RELEASE#2.csv",
@@ -142,43 +99,89 @@ def exploratory_analysis_day3_2f():
         index_col=None
     )
 
-    t = data["day"].to_numpy(dtype=float)
+    t_obs = data["day"].to_numpy(dtype=float)
     I_obs = data["active reported daily cases"].to_numpy(dtype=float)
 
-    # Here are the initial conditions (Lecture 3 pseudocode requires S0,E0,I0,R0,N)
-
-    N = 10000.0  # This is what was used in Lecture 2 (not sure what else we would use)
-
-    I0 = float(I_obs[0]) 
+    # Initial conditions
+    N = 10000.0
+    I0 = float(I_obs[0])
     E0 = 0.0
     R0 = 0.0
     S0 = N - E0 - I0 - R0
 
-    h = 1.0  # this is our daily time step
+    # Fit SEIR parameters using Release #2
+    best = grid_search_fit(
+        timepoints=t_obs,
+        I_obs=I_obs,
+        N=N,
+        S0=S0, E0=E0, I0=I0, R0=R0,
+        beta_range=(0.3, 0.7),
+        sigma_range=(0.1, 0.3),
+        gamma_range=(0.05, 0.25),
+        resolution=15
+    )
 
-    # ----- 2f: Here we predict peak by running model forward (Lecture 3 “Predicting the peak”) -----
-    t_future = np.arange(1, 301, 1, dtype=float)  # run out 300 days
-    Sf, Ef, If, Rf = euler_seir(beta_best, sigma_best, gamma_best, S0, E0, I0, R0, t_future, N, h=h)
+    beta_best = best["beta"]
+    sigma_best = best["sigma"]
+    gamma_best = best["gamma"]
 
-    # Find the peak from the forward run 
-    peak_idx = int(np.argmax(If))
-    peak_day = t_future[peak_idx]
-    peak_I = If[peak_idx]
+    print("Best-fit parameters from Release #2:")
+    print(f"  beta  = {beta_best:.3f}")
+    print(f"  sigma = {sigma_best:.3f}")
+    print(f"  gamma = {gamma_best:.3f}")
+    print(f"  SSE   = {best['sse']:.2f}")
 
-    print("\nPeak prediction from best-fit model (running forward):")
-    print(f"  Peak day (model)        = {peak_day:.0f}")
-    print(f"  Peak active infections  = {peak_I:.1f}")
+    # Step-size sensitivity check
+    step_sizes = [1.0, 0.5, 0.25]
+    results = []
 
-    # Plot the forward prediction of I(t) with the peak day marked
     plt.figure(figsize=(10, 6))
-    plt.plot(t_future, If, linewidth=2, label="Model I(t) forward prediction")
-    plt.axvline(peak_day, linestyle="--", label=f"Peak day = {peak_day:.0f}")
+
+    for h in step_sizes:
+        # Build time array out to day 300 using the given step size
+        t_future = np.arange(1.0, 300.0 + h, h, dtype=float)
+
+        # Run forward prediction
+        S, E, I, R = euler_seir(
+            beta_best, sigma_best, gamma_best,
+            S0, E0, I0, R0,
+            t_future, N, h=h
+        )
+
+        # Find the peak in I(t)
+        peak_idx = int(np.argmax(I))
+        peak_day = t_future[peak_idx]
+        peak_I = I[peak_idx]
+
+        results.append((h, peak_day, peak_I))
+
+        # Plot the forward infection curve for this step size
+        plt.plot(t_future, I, linewidth=2, label=f"h = {h}")
+
+    # Print comparison table
+    print("\nEuler step-size sensitivity check (forward prediction to day 300):")
+    for h, peak_day, peak_I in results:
+        print(f"  h = {h:<4} -> peak day = {peak_day:.2f}, peak active infections = {peak_I:.2f}")
+
+    # Compare smaller step sizes to the h = 1.0 baseline
+    base_h, base_peak_day, base_peak_I = results[0]
+
+    print("\nDifferences relative to h = 1.0:")
+    for h, peak_day, peak_I in results[1:]:
+        print(
+            f"  h = {h:<4} -> "
+            f"day difference = {peak_day - base_peak_day:.2f}, "
+            f"peak-I difference = {peak_I - base_peak_I:.2f}"
+        )
+
+    # Plot formatting
     plt.xlabel("Day")
     plt.ylabel("Active infections (model I)")
-    plt.title("Predicted I(t) forward in time (peak from SEIR model)")
+    plt.title("Euler step-size sensitivity check for SEIR forward prediction")
     plt.legend()
     plt.tight_layout()
     plt.show()
 
+
 if __name__ == "__main__":
-    exploratory_analysis_day3_2f()
+    exploratory_analysis_day4_extra_stepcheck()

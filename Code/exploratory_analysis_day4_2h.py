@@ -90,7 +90,6 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
 
     return best
 
-#Below is where the code changes.Now we need to load data form release #3 to plot it against SEIR
 
 # helper for time-varying parameters (for interventions)
 
@@ -266,21 +265,30 @@ def plot_baseline_vs_mask(t, base, mask):
     plt.plot(t, base, label="Baseline")
     plt.plot(t, mask, label="Mask mandate")
     plt.title("Baseline VT Data vs. Mask Mandate Protocol")
+    plt.xlabel("Day")
+    plt.ylabel("Active infections")
     plt.legend(); plt.tight_layout(); plt.show()
+
 
 def plot_baseline_vs_single(t, base, single):
     plt.figure(figsize=(10,6))
     plt.plot(t, base, label="Baseline")
     plt.plot(t, single, label="Single vaccine")
     plt.title("Baseline VT Data vs. Single Vaccine Protocol")
+    plt.xlabel("Day")
+    plt.ylabel("Active infections")
     plt.legend(); plt.tight_layout(); plt.show()
+
 
 def plot_baseline_vs_rollout(t, base, roll):
     plt.figure(figsize=(10,6))
     plt.plot(t, base, label="Baseline")
     plt.plot(t, roll, label="Rollout")
     plt.title("Baseline VT Data vs. Rollout Vaccine Protocol")
+    plt.xlabel("Day")
+    plt.ylabel("Active infections")
     plt.legend(); plt.tight_layout(); plt.show()
+
 
 def plot_all_interventions(t, base, mask, single, roll):
     plt.figure(figsize=(10,6))
@@ -289,8 +297,9 @@ def plot_all_interventions(t, base, mask, single, roll):
     plt.plot(t, single, label="Single vax")
     plt.plot(t, roll, label="Rollout")
     plt.title("Baseline VT Data vs. Each Chosen Intervention")
+    plt.xlabel("Day")
+    plt.ylabel("Active infections")
     plt.legend(); plt.tight_layout(); plt.show()
-
 
 def exploratory_analysis_day4_2h():
     global beta_best, sigma_best, gamma_best, E0_UVA

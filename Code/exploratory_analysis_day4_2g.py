@@ -179,7 +179,7 @@ def exploratory_analysis_day4_2g():
     print(f"Et (peak I) = {Et_I:.1f}, %et = {pct_et_I:.2f}%")
     print(f"Et (peak day) = {Et_day:.1f}, %et = {pct_et_day:.2f}%")
 
-    # plot
+    # plot Release #3 data vs SEIR model fit from Release #2
     plt.figure(figsize=(10, 6))
     plt.scatter(t3, I_obs3, label="Observed active cases (Release #3)", s=25)
     plt.plot(t3, Ib, linewidth=2, label="SEIR model fit from Release #2")
