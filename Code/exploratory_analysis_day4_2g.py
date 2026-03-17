@@ -92,38 +92,49 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
 
 #Below is where the code changes.Now we need to load data form release #3 to plot it against SEIR
 
-# Load Data Release #3
-data = pd.read_csv(
-    "C:\\Users\\Reaga\\OneDrive\\Desktop\\BME_2315\\Module-2-Epidemics-SIR-Modeling\\Data\\mystery_virus_daily_active_counts_RELEASE#3.csv",
+# Fit parameters using Release #2 only, then validate on Release #3
+
+data2 = pd.read_csv(
+    "../Data/mystery_virus_daily_active_counts_RELEASE#2.csv",
     parse_dates=["date"],
     header=0,
     index_col=None
 )
 
-t = data["day"].to_numpy(dtype=float)
-I_obs = data["active reported daily cases"].to_numpy(dtype=float)
+t2 = data2["day"].to_numpy(dtype=float)
+I_obs2 = data2["active reported daily cases"].to_numpy(dtype=float)
 
-# Here are the initial conditions (Lecture 3 pseudocode requires S0,E0,I0,R0,N)
+N = 10000.0
+I0_2 = float(I_obs2[0])
+E0_2 = 0.0
+R0_2 = 0.0
+S0_2 = N - E0_2 - I0_2 - R0_2
 
-N = 10000.0  # This is what was used in Lecture 2 (not sure what else we would use)
+h = 1.0
 
-I0 = float(I_obs[0]) 
-E0 = 0.0
-R0 = 0.0
-S0 = N - E0 - I0 - R0
-
-h = 1.0  # this is our daily time step
-
-# Parameter ranges + resolution from Class materials/seir_grid_search.html
+# First-pass coarse grid search over the full parameter ranges
 best = grid_search_fit(
-    timepoints=t,
-    I_obs=I_obs,
+    timepoints=t2,
+    I_obs=I_obs2,
     N=N,
-    S0=S0, E0=E0, I0=I0, R0=R0,
+    S0=S0_2, E0=E0_2, I0=I0_2, R0=R0_2,
     beta_range=(0.3, 0.7),
     sigma_range=(0.1, 0.3),
     gamma_range=(0.05, 0.25),
     resolution=15,
+    h=h
+)
+
+# Second-pass refined grid search around the first best fit
+best = grid_search_fit(
+    timepoints=t2,
+    I_obs=I_obs2,
+    N=N,
+    S0=S0_2, E0=E0_2, I0=I0_2, R0=R0_2,
+    beta_range=(max(0.3, best["beta"] - 0.05), min(0.7, best["beta"] + 0.05)),
+    sigma_range=(max(0.1, best["sigma"] - 0.03), min(0.3, best["sigma"] + 0.03)),
+    gamma_range=(max(0.05, best["gamma"] - 0.03), min(0.25, best["gamma"] + 0.03)),
+    resolution=25,
     h=h
 )
 
@@ -132,40 +143,68 @@ sigma_best = best["sigma"]
 gamma_best = best["gamma"]
 best_sse = best["sse"]
 
-# Lecture 2 defines R0 = beta/gamma
 R0_best = beta_best / gamma_best
 
 def exploratory_analysis_day4_2g():
 
-    # This runs the full Day 4 workflow for Data Release #3:
-    
-    # Load Data Release #3
-    data = pd.read_csv(
-        "C:\\Users\\Reaga\\OneDrive\\Desktop\\BME_2315\\Module-2-Epidemics-SIR-Modeling\\Data\\mystery_virus_daily_active_counts_RELEASE#3.csv",
+    # This runs the Day 4 validation workflow:
+    # fit parameters on Release #2, then compare prediction to Release #3
+
+    data3 = pd.read_csv(
+        "../Data/mystery_virus_daily_active_counts_RELEASE#3.csv",
         parse_dates=["date"],
         header=0,
         index_col=None
     )
 
-    t = data["day"].to_numpy(dtype=float)
-    I_obs = data["active reported daily cases"].to_numpy(dtype=float)
+    t = data3["day"].to_numpy(dtype=float)
+    I_obs = data3["active reported daily cases"].to_numpy(dtype=float)
 
-    # Here are the initial conditions (Lecture 3 pseudocode requires S0,E0,I0,R0,N)
-
-    N = 10000.0  # This is what was used in Lecture 2 (not sure what else we would use)
-
-    I0 = float(I_obs[0]) 
+    N = 10000.0
+    I0 = float(I_obs[0])
     E0 = 0.0
     R0 = 0.0
     S0 = N - E0 - I0 - R0
 
-    h = 1.0  # this is our daily time step
-    # ----- 2e: Plot best-fit model vs data -----
+    h = 1.0
+
     Sb, Eb, Ib, Rb = euler_seir(beta_best, sigma_best, gamma_best, S0, E0, I0, R0, t, N, h=h)
+
+    # Peak-based validation results
+    true_peak_idx = int(np.argmax(I_obs))
+    true_peak_day = t[true_peak_idx]
+    true_peak_I = I_obs[true_peak_idx]
+
+    model_peak_idx = int(np.argmax(Ib))
+    model_peak_day = t[model_peak_idx]
+    model_peak_I = Ib[model_peak_idx]
+
+    Et_I = true_peak_I - model_peak_I
+    pct_et_I = (Et_I / true_peak_I) * 100.0
+
+    Et_day = true_peak_day - model_peak_day
+    pct_et_day = (Et_day / true_peak_day) * 100.0
+
+    print("\nRelease #3 vs model fit from Release #2")
+    print(f"Best-fit beta  = {beta_best:.3f}")
+    print(f"Best-fit sigma = {sigma_best:.3f}")
+    print(f"Best-fit gamma = {gamma_best:.3f}")
+    print(f"Best-fit SSE   = {best_sse:.2f}")
+    print(f"Implied R0     = {R0_best:.3f}")
+
+    print("\nPeak comparison")
+    print(f"True peak:  day {true_peak_day:.0f}, I = {true_peak_I:.1f}")
+    print(f"Model peak: day {model_peak_day:.0f}, I = {model_peak_I:.1f}")
+
+    print("\nError metrics")
+    print(f"Et (peak I)   = {Et_I:.1f}")
+    print(f"%et (peak I)  = {pct_et_I:.2f}%")
+    print(f"Et (peak day) = {Et_day:.1f}")
+    print(f"%et (peak day)= {pct_et_day:.2f}%")
 
     plt.figure(figsize=(10, 6))
     plt.scatter(t, I_obs, label="Observed active cases (Release #3)", s=25)
-    plt.plot(t, Ib, linewidth=2, label="Best-fit SEIR I(t) (Euler)")
+    plt.plot(t, Ib, linewidth=2, label="SEIR model fit from Release #2")
     plt.xlabel("Day")
     plt.ylabel("Active infections")
     plt.title("Observed data vs best-fit SEIR model (Euler + grid search)")
