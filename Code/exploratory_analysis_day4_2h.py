@@ -390,6 +390,7 @@ def plot_all_interventions(t, base, mask, single, roll, combo):
     plt.ylabel("Active infections")
     plt.legend(); plt.tight_layout(); plt.show()
 
+# Main function to run the VT intervention comparisons and plotting
 def exploratory_analysis_day4_2h():
     global beta_best, sigma_best, gamma_best, E0_UVA
 
@@ -426,6 +427,7 @@ def exploratory_analysis_day4_2h():
         h=h
     )
 
+    # Extract best-fit parameters from Release #2
     beta_best = best2["beta"]
     sigma_best = best2["sigma"]
     gamma_best = best2["gamma"]
@@ -433,6 +435,7 @@ def exploratory_analysis_day4_2h():
     # Lecture 4 says E0(VT) = E0(UVA)
     E0_UVA = E0_2
 
+    # Now we have our best-fit parameters from Release #2, and we can apply the SEIR model with interventions to VT data for comparison.
     t, base, mask, single, roll, combo = vt_interventions()
 
     def peak_metrics(t, I):
@@ -446,6 +449,7 @@ def exploratory_analysis_day4_2h():
     d_roll, Ipk_roll = peak_metrics(t, roll)
     d_combo, Ipk_combo = peak_metrics(t, combo)
 
+    # Print peak day and peak I for each scenario, and the reduction in peak I compared to baseline
     print("\nVT intervention comparison: peak metrics")
     print(f"Baseline: peak day {d_base:.0f}, peak I {Ipk_base:.1f}")
     print(f"Mask:     peak day {d_mask:.0f}, peak I {Ipk_mask:.1f}")
@@ -462,6 +466,7 @@ def exploratory_analysis_day4_2h():
     A_roll = np.sum(roll[mask_70_120])
     A_combo = np.sum(combo[mask_70_120])
 
+    # Print total active infections over days 70–120 for each scenario, and the reduction compared to baseline
     print("\nSum of active infections over days 70–120 (burden proxy)")
     print(f"Baseline: {A_base:.1f}")
     print(f"Mask:     {A_mask:.1f}  (reduction {A_base - A_mask:.1f})")
@@ -469,6 +474,7 @@ def exploratory_analysis_day4_2h():
     print(f"Vax roll: {A_roll:.1f} (reduction {A_base - A_roll:.1f})")
     print(f"Combo:    {A_combo:.1f} (reduction {A_base - A_combo:.1f})")
 
+    # Plotting comparisons  
     plot_baseline_vs_mask(t, base, mask)
     plot_baseline_vs_single(t, base, single)
     plot_baseline_vs_rollout(t, base, roll)

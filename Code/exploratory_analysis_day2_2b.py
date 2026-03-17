@@ -27,6 +27,7 @@ I_all = data["active reported daily cases"].to_numpy(dtype=float)
 fit_start_day = 10
 mask = t_all >= fit_start_day
 
+# We will fit the exponential growth model to the data in this window, so we create masked arrays for t and I.
 t = t_all[mask]
 I = I_all[mask]
 

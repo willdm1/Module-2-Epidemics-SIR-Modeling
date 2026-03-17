@@ -145,6 +145,7 @@ best_sse = best["sse"]
 
 R0_best = beta_best / gamma_best
 
+#  Now we have our best-fit parameters from Release #2, and we can compare the SEIR model predictions to the observed data in Release #3 for validation.
 def exploratory_analysis_day4_2g():
 
     # This runs the Day 4 validation workflow:
@@ -157,6 +158,7 @@ def exploratory_analysis_day4_2g():
         index_col=None
     )
 
+    # Extract time and observed infections from Release #3
     t = data3["day"].to_numpy(dtype=float)
     I_obs = data3["active reported daily cases"].to_numpy(dtype=float)
 
@@ -168,6 +170,7 @@ def exploratory_analysis_day4_2g():
 
     h = 1.0
 
+    # Run the SEIR model with the best-fit parameters from Release #2 to get predictions for Release #3 timepoints
     Sb, Eb, Ib, Rb = euler_seir(beta_best, sigma_best, gamma_best, S0, E0, I0, R0, t, N, h=h)
 
     # Peak-based validation results
@@ -175,16 +178,20 @@ def exploratory_analysis_day4_2g():
     true_peak_day = t[true_peak_idx]
     true_peak_I = I_obs[true_peak_idx]
 
+    # Find the peak from the model fit to Release #2
     model_peak_idx = int(np.argmax(Ib))
     model_peak_day = t[model_peak_idx]
     model_peak_I = Ib[model_peak_idx]
 
+    # Calculate error metrics for peak predictions
     Et_I = true_peak_I - model_peak_I
     pct_et_I = (Et_I / true_peak_I) * 100.0
 
+    # Calculate error metrics for peak day predictions
     Et_day = true_peak_day - model_peak_day
     pct_et_day = (Et_day / true_peak_day) * 100.0
 
+    # Print results
     print("\nRelease #3 vs model fit from Release #2")
     print(f"Best-fit beta  = {beta_best:.3f}")
     print(f"Best-fit sigma = {sigma_best:.3f}")
@@ -202,6 +209,7 @@ def exploratory_analysis_day4_2g():
     print(f"Et (peak day) = {Et_day:.1f}")
     print(f"%et (peak day)= {pct_et_day:.2f}%")
 
+    # Plotting the observed data and best-fit SEIR model predictions for Release #3
     plt.figure(figsize=(10, 6))
     plt.scatter(t, I_obs, label="Observed active cases (Release #3)", s=25)
     plt.plot(t, Ib, linewidth=2, label="SEIR model fit from Release #2")
