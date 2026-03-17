@@ -57,10 +57,12 @@ D_min = 2 + 5
 D_max = 2 + 9
 D_mid = 0.5 * (D_min + D_max)
 
+# Convert the growth rate r to R0 using the formula R0 = exp(r * D) where D is the infectious period. We will use the range of D values to get a range of R0 estimates.
 R0_min = np.exp(r_hat * D_min)
 R0_mid = np.exp(r_hat * D_mid)
 R0_max = np.exp(r_hat * D_max)
 
+# Print the results
 print(f"Fit window: day >= {fit_start_day}")
 print(f"Estimated exponential growth rate r: {r_hat:.4f} per day")
 print(f"Estimated R0 range using D in [{D_min:.1f}, {D_max:.1f}] days:")
@@ -78,6 +80,7 @@ t_dense = tau_dense + t0
 I_fit_dense = exponential_growth(tau_dense, I0_fit, r_hat)
 plt.plot(t_dense, I_fit_dense, linewidth=2, label="Exponential fit (early window)")
 
+# Labels and title
 plt.xlabel('Day')
 plt.ylabel("Active Infections (Active Reported Daily Cases)")
 plt.title("Mystery Virus: Exponential Fit to Early Growth (for R0 estimate)")

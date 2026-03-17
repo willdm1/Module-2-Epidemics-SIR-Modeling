@@ -18,6 +18,7 @@ data = pd.read_csv(
 
 # Make a plot of the active cases over time
 
+# We will use the "day" column for the x-axis and the "active reported daily cases" column for the y-axis.
 plt.figure(figsize=(10,6)) 
 plt.plot(data["day"], data["active reported daily cases"], marker="o", linewidth=2) # Labels and title 
 plt.xlabel("Day") 

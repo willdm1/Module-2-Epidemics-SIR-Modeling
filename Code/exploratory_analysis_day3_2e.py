@@ -14,11 +14,13 @@ def euler_seir(beta, sigma, gamma, S0, E0, I0, R0, timepoints, N, h=1.0):
     # timepoints = np.asarray(timepoints, dtype=float)
     n = len(timepoints) 
 
+    # Initialize arrays to store the SEIR compartments over time
     S = np.zeros(n, dtype=float)
     E = np.zeros(n, dtype=float)
     I = np.zeros(n, dtype=float)
     R = np.zeros(n, dtype=float)
 
+    # Set initial conditions
     S[0], E[0], I[0], R[0] = S0, E0, I0, R0
 
     for i in range(n - 1):
@@ -129,6 +131,7 @@ best_sse = best["sse"]
 # Lecture 2 defines R0 = beta/gamma
 R0_best = beta_best / gamma_best
 
+# ----- 2e: Plot best-fit model vs data -----
 def exploratory_analysis_day3_2e():
 
     # This runs the full Day 3 workflow for Data Release #2:
@@ -148,15 +151,18 @@ def exploratory_analysis_day3_2e():
 
     N = 10000.0  # This is what was used in Lecture 2 (not sure what else we would use)
 
+    # We repeat the parameter fitting here so that this function can run independently, but in practice we would want to avoid this redundancy and just call the previous function to get the best parameters.
     I0 = float(I_obs[0]) 
     E0 = 0.0
     R0 = 0.0
     S0 = N - E0 - I0 - R0
 
     h = 1.0  # this is our daily time step
+    
     # ----- 2e: Plot best-fit model vs data -----
     Sb, Eb, Ib, Rb = euler_seir(beta_best, sigma_best, gamma_best, S0, E0, I0, R0, t, N, h=h)
 
+    # Plotting the observed data and best-fit SEIR model predictions
     plt.figure(figsize=(10, 6))
     plt.scatter(t, I_obs, label="Observed active cases (Release #2)", s=25)
     plt.plot(t, Ib, linewidth=2, label="Best-fit SEIR I(t) (Euler)")

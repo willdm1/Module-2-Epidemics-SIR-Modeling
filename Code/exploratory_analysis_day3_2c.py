@@ -14,13 +14,16 @@ def euler_seir(beta, sigma, gamma, S0, E0, I0, R0, timepoints, N, h=1.0):
     # timepoints = np.asarray(timepoints, dtype=float)
     n = len(timepoints) 
 
+    # Initialize arrays to store the SEIR compartments over time
     S = np.zeros(n, dtype=float)
     E = np.zeros(n, dtype=float)
     I = np.zeros(n, dtype=float)
     R = np.zeros(n, dtype=float)
 
+    # Set initial conditions
     S[0], E[0], I[0], R[0] = S0, E0, I0, R0
 
+    # Euler's method loop to update the SEIR compartments at each time step
     for i in range(n - 1):
         # SEIR equations that we choose from class
         dS = -beta * S[i] * I[i] / N
@@ -42,7 +45,7 @@ def euler_seir(beta, sigma, gamma, S0, E0, I0, R0, timepoints, N, h=1.0):
 
     return S, E, I, R
 
-
+# This is our sum of squared errors function to compare observed infections to model predictions.
 def sse(I_obs, I_model):
     # SSE = Σ (I_obs - I_model)^2
     # We match the Lecture 3 format for the error function that grid search minimizes.
@@ -51,6 +54,7 @@ def sse(I_obs, I_model):
     return np.sum((I_obs - I_model) ** 2)
 
 
+# This is our 3-parameter grid search over (beta, sigma, gamma), minimizing SSE.
 def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
                     beta_range=(0.3, 0.7),
                     sigma_range=(0.1, 0.3),
@@ -85,7 +89,7 @@ def grid_search_fit(timepoints, I_obs, N, S0, E0, I0, R0,
 
     return best
 
-
+# This is our main function that runs the full Day 3 workflow for Data Release #2, including loading data, setting initial conditions, running Euler's method, and plotting the results.
 def exploratory_analysis_day3_2c():
 
     # This runs the full Day 3 workflow for Data Release #2:
