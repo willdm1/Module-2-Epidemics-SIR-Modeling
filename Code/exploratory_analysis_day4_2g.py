@@ -191,15 +191,5 @@ def exploratory_analysis_day4_2g():
     plt.tight_layout()
     plt.show()
 
-<<<<<<< HEAD
-    I_obs.max()
-    I_obs[119]
-    
-    incidence = beta_best * Sb * Ib / N
-    print("Max incidence:", incidence.max())
-    print("Incidence on day 120:", incidence[119])
-=======
->>>>>>> 47d51c443f9178e2d32d76af50d71901ec53320d
-
 if __name__ == "__main__":
     exploratory_analysis_day4_2g()
