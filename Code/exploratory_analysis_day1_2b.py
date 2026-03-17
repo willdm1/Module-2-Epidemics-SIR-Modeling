@@ -1,6 +1,7 @@
 # exploratory_analysis_day1_2b
 # Written by Reagan Oswald
 # Updated 3/9/2026
+# This script loads Data Release #1 and plots active cases over time for initial outbreak exploration.
 
 #%%
 import pandas as pd
@@ -8,8 +9,12 @@ import matplotlib.pyplot as plt
 
 
 # Load the data
-data = pd.read_csv('Data/mystery_virus_daily_active_counts_RELEASE#1.csv')
-
+data = pd.read_csv(
+    "../Data/mystery_virus_daily_active_counts_RELEASE#1.csv",
+    parse_dates=["date"],
+    header=0,
+    index_col=None
+)
 
 # Make a plot of the active cases over time
 
@@ -32,3 +37,5 @@ plt.show()
 # It would be helpful to know how the virus spreads. Viruses that spread more easily will likely have a greater rate of 
 # infection and result in a greater outbreak curve. For example, an airporn virus may infect a population faster than one 
 # that spreads fluids.
+
+# %%

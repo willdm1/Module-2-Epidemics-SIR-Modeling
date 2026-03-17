@@ -1,6 +1,7 @@
 # exploratory_analysis_day3_2d
 # Written by Will Marschall and Reagan Oswald
 # Updated 3/9/2026
+# This script performs a grid search on the SEIR model parameters for Data Release #2 to find the best fit to the observed infections.
 
 import numpy as np
 import pandas as pd
@@ -137,7 +138,7 @@ def exploratory_analysis_day3_2d():
     print(f"  sigma = {sigma_best:.3f}")
     print(f"  gamma = {gamma_best:.3f}")
     print(f"  SSE   = {best_sse:.2f}")
-    print(f"  Implied R0 (Lecture 2: R0 = beta/gamma) = {R0_best:.3f}")
+    print(f"  Implied R0 (R0 = beta/gamma) = {R0_best:.3f}")
 
 if __name__ == "__main__":
     exploratory_analysis_day3_2d()

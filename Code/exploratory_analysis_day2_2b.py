@@ -1,6 +1,7 @@
 # exploratory_analysis_day2_2b
 # Written by Will Marschall
 # Updated: 3/9/2026
+# This script fits an early exponential growth model to Data Release #1 to estimate the outbreak growth rate and approximate R0.
 
 #%%
 # Import necessary libraries
@@ -10,8 +11,13 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 #%%
-# Load the data
-data = pd.read_csv('../Data/mystery_virus_daily_active_counts_RELEASE#1.csv', parse_dates=['date'], header=0, index_col=None)
+# Load Data Release #2
+data = pd.read_csv(
+    "../Data/mystery_virus_daily_active_counts_RELEASE#1.csv",
+    parse_dates=["date"],
+    header=0,
+    index_col=None
+)
 
 # We ceck the data
 t_all = data["day"].to_numpy(dtype=float)
