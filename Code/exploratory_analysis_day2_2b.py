@@ -1,6 +1,7 @@
 # exploratory_analysis_day2_2b
 # Written by Will Marschall
 # Updated: 3/9/2026
+# This script fits an early exponential growth model to Data Release #1 to estimate the outbreak growth rate and approximate R0.
 
 #%%
 # Import necessary libraries

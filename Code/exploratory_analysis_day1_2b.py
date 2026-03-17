@@ -1,6 +1,7 @@
 # exploratory_analysis_day1_2b
 # Written by Reagan Oswald
 # Updated 3/9/2026
+# This script loads Data Release #1 and plots active cases over time for initial outbreak exploration.
 
 #%%
 import pandas as pd

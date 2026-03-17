@@ -1,6 +1,7 @@
 # exploratory_analysis_day4_2g
 # Written by Will and Reagan
 # Updated 3/14/2026
+# This script compares the SEIR model fit from Data Release #2 against the full Data Release #3 outbreak data for validation.
 
 #For this section we want to plot the SEIR model against day 3 release
 #The code for the SEIR model was already written for Day3_2e

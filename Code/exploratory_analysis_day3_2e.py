@@ -1,6 +1,7 @@
 # exploratory_analysis_day3_2e
 # Written by Will Marschall and Reagan Oswald
 # Updated 3/9/2026
+# This script plots the best-fit SEIR infection curve against the observed Data Release #2 infection data.
 
 import numpy as np
 import pandas as pd

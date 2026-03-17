@@ -1,6 +1,7 @@
 # exploratory_analysis_day3_2d
 # Written by Will Marschall and Reagan Oswald
 # Updated 3/9/2026
+# This script performs a grid search on the SEIR model parameters for Data Release #2 to find the best fit to the observed infections.
 
 import numpy as np
 import pandas as pd

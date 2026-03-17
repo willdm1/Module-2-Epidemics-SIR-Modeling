@@ -1,6 +1,7 @@
 # exploratory_analysis_day3_2f
 # Written by Will Marschall and Reagan Oswald
 # Updated 3/9/2026
+# This script runs the best-fit SEIR model forward in time to predict the timing and size of the epidemic peak.
 
 import numpy as np
 import pandas as pd

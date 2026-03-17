@@ -1,6 +1,7 @@
 # exploratory_analysis_day4_2h
 # Written by Will and Reagan
 # Updated 3/14/2026
+# This script applies the best-fit SEIR model to Virginia Tech and compares baseline outbreak dynamics under multiple intervention strategies.
 
 #Strategy 1/3: Mask mandate with reduce Beta by 40% starting Day 70
 #Strategy 2/3: Vaccine Campaign will move 2000*0.9 from S to R as a single event on day 70

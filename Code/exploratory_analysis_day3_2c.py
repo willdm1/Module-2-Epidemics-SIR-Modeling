@@ -1,6 +1,7 @@
 # exploratory_analysis_day3_2c
 # Written by Will Marschall and Reagan Oswald
 # Updated 3/9/2026
+# This script uses Euler's method to solve the SEIR model for Data Release #2 and plot the compartment dynamics.
 
 import numpy as np
 import pandas as pd

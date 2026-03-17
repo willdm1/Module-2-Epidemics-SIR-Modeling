@@ -1,6 +1,7 @@
 # exploratory_analysis_day4_extra_stepcheck
 # Written by Will
 # Updated 3/15/2026
+# This script checks how sensitive the SEIR forward prediction is to the Euler step size by comparing peak predictions across multiple h values.
 
 import numpy as np
 import pandas as pd
